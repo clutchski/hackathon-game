@@ -57,14 +57,63 @@ class Bullet extends wolf.Circle
         opts.radius = 5
         opts.speed = 1.5
         opts.dragCoefficient = 0
+        opts.fillStyle = "#000"
         super(opts)
 
 class Substance extends wolf.Circle
 
     constructor : (opts = {}) ->
         defaults =
-            subSubstances = []
+            subSubstances : []
+            x: wolf.random(100, 700)
+            y: wolf.random(100, 400)
+            speed: 0.1
+            direction: new wolf.Vector(wolf.random(-1, 1), wolf.random(-1, 1)).normalize()
+            radius: wolf.random(30, 45)
+            dragCoefficient: 0
+            fillStyle: "#abcdef"
+
         super(wolf.defaults(opts, defaults))
+        @lastMove = new Date()
+        @directionPeriod = 100
+
+    elapse : () ->
+        now = new Date()
+        if now - @lastMove > @directionPeriod
+            v = wolf.random(-1, 1)
+            if Math.random() > 0.5
+                @direction = new wolf.Vector(@direction.x, v).normalize()
+            else
+                @direction = new wolf.Vector(v, @direction.y).normalize()
+            @lastMove = now
+            @directionPeriod = wolf.random(200, 1200)
+
+    split : () ->
+        @destroy()
+        return @subSubstances
+
+class Water extends Substance
+
+    constructor : (opts = {}) ->
+        opts.subSubstances = [
+            new Oxygen()
+            new Hydrogen()
+            new Hydrogen()
+        ]
+        opts.fillStyle = "blue"
+        super(opts)
+
+class Hydrogen extends Substance
+
+    constructor : (opts = {}) ->
+        opts.fillStyle = "red"
+        super(opts)
+
+class Oxygen extends Substance
+
+    constructor : (opts = {}) ->
+        opts.fillStyle = "white"
+        super(opts)
 
 
 $(document).ready () ->
@@ -100,20 +149,21 @@ $(document).ready () ->
     engine.add(ship)
     engine.start()
 
+    addSubstance = (substance) ->
+        engine.add(substance)
+        substance.bind 'collided', (c, other) ->
+            if other instanceof Bullet
+                children = substance.split()
+                (addSubstance(c) for c in children)
+                other.destroy()
+
     createSubstance = () ->
         console.log("creating substance")
-        substance = new Substance({
-            x: wolf.random(0, 800)
-            y: wolf.random(0, 500)
-            speed: 0.1
-            direction: new wolf.Vector(wolf.random(-1, 1), wolf.random(-1, 1)).normalize()
-            radius: 20
-            dragCoefficient: 0
-        })
         if engine.isRunning
-            engine.add(substance)
+            substance = new Water()
+            addSubstance(substance)
             setTimeout( () ->
                 createSubstance()
-            , 2000)
+            , 4000)
 
     createSubstance()
