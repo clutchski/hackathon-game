@@ -156,6 +156,8 @@ $(document).ready () ->
                 children = substance.split()
                 (addSubstance(c) for c in children)
                 other.destroy()
+            else
+                c.resolve() # let them float
 
     createSubstance = () ->
         console.log("creating substance")
