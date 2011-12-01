@@ -41,6 +41,23 @@ class Ship extends wolf.Polygon
 
         doTurn()
 
+    # Return a bullet fired by the ship.
+    shootBullet : () ->
+        position = @direction.scale(10).add(@vertices[1])
+        bullet = new Bullet(
+            x: position.x
+            y: position.y
+            direction: @direction.copy()
+        )
+
+# Bullets kill things!
+class Bullet extends wolf.Circle
+
+    constructor : (opts={}) ->
+        opts.radius = 5
+        opts.speed = 1.5
+        opts.dragCoefficient = 0
+        super(opts)
 
 class Substance extends wolf.Circle
 
