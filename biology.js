@@ -25,8 +25,8 @@
         }
         return _results;
       })();
+      opts.fillStyle = "#c1f3ff";
       Ship.__super__.constructor.call(this, opts);
-      this.fillColor = "#aaa";
     }
     return Ship;
   })();
