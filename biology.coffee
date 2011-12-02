@@ -311,13 +311,29 @@ class CarbonDioxide extends Substance
         super(opts)
 
 
-updateInventory = (currentShip) ->
+updateInventory = (currentShip, curLevel) ->
 
     # Update the intenvotry counts.
-    for symbol, substances of currentShip.inventory
-        console.log("#{symbol} #{substances.length}")
+    for symbol, [ok, max] of curLevel.substanceLevels
+
         s = $("#substance#{symbol}")
-        s.html(substances.length)
+        subs = currentShip.inventory[symbol] || []
+        length = subs.length
+        text = ""
+        i = 0
+        while i  < length
+            text += "="
+            i += 1
+        for j in [length..max-1]
+            if j == ok
+                text += '|'
+            else
+                text += '.'
+        s.html(text)
+    #3
+    #for symbol, substances of currentShip.inventory
+    #    console.log("#{symbol} #{substances.length}")
+    #    s.html(substances.length)
 
 
 class Level
@@ -344,7 +360,8 @@ class Level
         for symbol, substances of @substanceLevels
             subs = inventory[symbol] || []
             [ok, max] = @getLevels(symbol)
-            if substances.length > max
+            console.log("count: #{subs.length} [#{ok}, #{max}]")
+            if subs.length >= max
                 return true
         return false
 
@@ -365,10 +382,10 @@ class SpaceLevel extends Level
         super()
         @substanceLevels = {
             'O' : [2, 10]
-            'H' : [2, 10]
-            'C' : [2, 10]
+            'H' : [4, 10]
+            'C' : [2, 6]
             'Na' : [2, 10]
-            'Cl' : [2, 10]
+            'Cl' : [3, 10]
         }
 
 class WaterLevel extends Level
@@ -380,11 +397,11 @@ class WaterLevel extends Level
         """
         super()
         @substanceLevels = {
-            'O' : [2, 10]
-            'H' : [2, 10]
-            'C' : [2, 10]
-            'Na' : [2, 10]
-            'Cl' : [2, 10]
+            'O' : [2, 3]
+            'H' : [2, 3]
+            'C' : [2 ,3]
+            'Na' : [2, 3]
+            'Cl' : [2, 3]
         }
 
 engine = null
@@ -416,13 +433,16 @@ initializeLevel = (LevelClass, images) ->
     engine = new wolf.Engine("canvas")
     engine.environment.gravitationalConstant = 0
 
+
     ship = new Ship({x: 200, y: 200, speed: 0, images: shipimages})
 
+    updateInventory(ship,level)
     ship.bind 'inventory', () ->
         logger.info "updating ui"
-        updateInventory(ship)
+        updateInventory(ship, level)
         if level.didYouDie(ship.inventory)
-            alert('overload!')
+            death()
+            alert('death')
         else if level.didYouWin(ship.inventory)
             alert('glory!')
     # Map key presses to behaviours.

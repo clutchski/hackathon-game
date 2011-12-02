@@ -78,8 +78,12 @@ body {
 .inventory_list {
   list-style:none;
   float:right;
-  text-align:right;
+  text-align:left;
   font-weight:bold;
+}
+
+.sl {
+  fixed-width:2px;
 }
 
 .substance {
