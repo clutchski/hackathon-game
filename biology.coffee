@@ -257,7 +257,11 @@ class Oxygen extends Substance
 
 
 updateInventory = (currentShip) ->
-
+    alert('aaa')
+    subs = $('.substance')
+    alert(subs)
+    for symbol, substances of currentShip.inventory
+        subs.find('[symbol="#{symbol}"]').text(substances.length)
 
 initialize = (images) ->
 
@@ -296,9 +300,12 @@ initialize = (images) ->
             logger.info("traaactor")
             beam = ship.tractorBeam()
             beam.bind 'collided', (c, other) ->
-                if other instanceof Substance and other.isElement() and not beam.element
-                    beam.lockOn(other)
-                    other.destroy()
+                if other instanceof Substance and not beam.element
+                    if other.isElement()
+                        beam.lockOn(other)
+                        other.destroy()
+                    else
+                        beam.destroy()
                 else if other == ship
                     beam.destroy()
                     ship.addSubstance(beam.element) if beam.element

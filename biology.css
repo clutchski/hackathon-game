@@ -7,12 +7,14 @@
 body {
   background-color:#2b2b2b;
   font-family:Courier New;
+  color: #ccc;
 }
 
 #title {
-  color: #ccc;
-  margin:10px;
   font-size:60px;
+  display:inline;
+  float:left;
+  margin-right:20px;
   text-shadow: 2px 2px #ff69bf;
 }
 
@@ -22,7 +24,14 @@ body {
   margin-right:auto;
 }
 
+.inventory_title {
+  font-weight:bold;
+  align:middle;
+}
+
 #game {
+  clear:both;
+  margin-top:20px;
   background-image:url(images/space.jpg);
   width: 800px;
   height:500px;
