@@ -11,6 +11,12 @@ class Ship extends wolf.Polygon
         opts.direction = new wolf.Vector(0, -1)
         super(opts)
 
+    render:  (context) ->
+        rads = @direction.getRotation()
+        c = @getCenter()
+        context.translate(c.x, c.y)
+        context.rotate(rads + Math.PI / 2)
+        context.drawImage(@image, -30.5, -30.5)
 
     # Apply the shift's thrusters.
     thrust : () ->
@@ -67,7 +73,8 @@ class Substance extends wolf.Circle
             subSubstances : []
             x: wolf.random(100, 700)
             y: wolf.random(100, 400)
-            speed: 0.1
+            speed: 0.2
+            mass: 10000
             direction: new wolf.Vector(wolf.random(-1, 1), wolf.random(-1, 1)).normalize()
             radius: wolf.random(30, 45)
             dragCoefficient: 0
@@ -116,13 +123,14 @@ class Oxygen extends Substance
         super(opts)
 
 
-$(document).ready () ->
+initialize = (images) ->
 
     # Initialize the engine.
     engine = new wolf.Engine("canvas")
     engine.environment.gravitationalConstant = 0
 
-    ship = new Ship({x: 200, y: 200, speed: 0})
+    ship = new Ship({x: 200, y: 200, speed: 0, image: images.ship})
+    wall = new wolf.Rectangle({x:0, y:0, height: 10, width: 800, mass:100000})
 
     # Map key presses to behaviours.
     commands =
@@ -137,16 +145,18 @@ $(document).ready () ->
             engine.add(bullet)
         80 : () ->
             engine.logStatusReport()
+        81 : () ->
+            engine.toggle()
 
     # Attach behaviours.
     $(document).keydown (event) ->
         key = event.which || event.keyCode
         console.log(key)
-
         callback = commands[key]
         callback() if callback
 
     engine.add(ship)
+    engine.add(wall)
     engine.start()
 
     addSubstance = (substance) ->
@@ -164,8 +174,16 @@ $(document).ready () ->
         if engine.isRunning
             substance = new Water()
             addSubstance(substance)
-            setTimeout( () ->
-                createSubstance()
-            , 4000)
+        setTimeout( () ->
+            createSubstance()
+        , 4000)
 
     createSubstance()
+
+$(document).ready () ->
+    shipImage = new Image()
+    shipImage.onload = () ->
+        images =
+            ship: shipImage
+        initialize(images)
+    shipImage.src = 'ship.png'
