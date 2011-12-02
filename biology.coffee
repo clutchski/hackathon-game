@@ -10,16 +10,18 @@ class Ship extends wolf.Polygon
         opts.fillStyle = "#c1f3ff"
         opts.direction = new wolf.Vector(0, -1)
         super(opts)
+        @image = @images.static
 
     render:  (context) ->
         rads = @direction.getRotation()
         c = @getCenter()
         context.translate(c.x, c.y)
         context.rotate(rads + Math.PI / 2)
-        context.drawImage(@image, -30.5, -30.5)
+        context.drawImage(@image, -30.5, -30)
 
     # Apply the shift's thrusters.
     thrust : () ->
+        @thrustIterations = 30
         impulse = @direction.scale(0.8)
         console.log("applying impulse #{impulse}")
         @applyImpulse(impulse)
@@ -55,6 +57,17 @@ class Ship extends wolf.Polygon
             y: position.y
             direction: @direction.copy()
         )
+
+    # Elapse.
+    elapse : (ms, iteration) ->
+        @thrustIterations = Math.max(@thrustIterations - 1, 0)
+        @image = if not @thrustIterations
+            @images.static
+        else
+            @images.thrust1
+        console.log('aaa')
+
+
 
 # Bullets kill things!
 class Bullet extends wolf.Circle
@@ -133,11 +146,17 @@ class Oxygen extends Substance
 
 initialize = (images) ->
 
+    shipimages = {
+        static : images['images/ship.png']
+        thrust1 : images['images/ship.thrust.1.png']
+        thrust2 : images['images/ship.thrust.2.png']
+    }
+
     # Initialize the engine.
     engine = new wolf.Engine("canvas")
     engine.environment.gravitationalConstant = 0
 
-    ship = new Ship({x: 200, y: 200, speed: 0, image: images.ship})
+    ship = new Ship({x: 200, y: 200, speed: 0, images: shipimages})
     # Map key presses to behaviours.
     commands =
         38 : () ->
@@ -190,9 +209,18 @@ initialize = (images) ->
     createSubstance()
 
 $(document).ready () ->
-    shipImage = new Image()
-    shipImage.onload = () ->
-        images =
-            ship: shipImage
-        initialize(images)
-    shipImage.src = 'images/ship.png'
+    urls = [
+        'images/ship.png'
+        'images/ship.thrust.1.png'
+        'images/ship.thrust.2.png'
+    ]
+    images = {}
+    loaded = 0
+    for url in urls
+        image = new Image()
+        images[url] = image
+        image.onload = () ->
+            loaded += 1
+            if loaded == urls.length
+                initialize(images)
+        image.src = url
