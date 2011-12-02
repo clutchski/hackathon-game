@@ -3,18 +3,29 @@
   padding:0;
 }
 
+
 body {
-  padding: 100px;
   background-color:#2b2b2b;
+  font-family:Courier New;
 }
 
+#title {
+  color: #ccc;
+  margin:10px;
+  font-size:60px;
+  text-shadow: 2px 2px #ff69bf;
+}
 
-#container {
-  background-image:url(images/space.jpg);
+#main {
   width:800px;
-  height:500px;
   margin-left:auto;
   margin-right:auto;
+}
+
+#game {
+  background-image:url(images/space.jpg);
+  width: 800px;
+  height:500px;
   border-radius:15px;
   border:2px solid #bbb;
 }
