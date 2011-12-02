@@ -23,7 +23,6 @@ class Ship extends wolf.Polygon
     thrust : () ->
         @thrustIterations = 30
         impulse = @direction.scale(0.8)
-        console.log("applying impulse #{impulse}")
         @applyImpulse(impulse)
 
     # Turn the ship to the starboard side.
@@ -65,7 +64,6 @@ class Ship extends wolf.Polygon
             @images.static
         else
             @images.thrust
-        console.log('aaa')
 
 
 
@@ -175,7 +173,6 @@ initialize = (images) ->
     # Attach behaviours.
     $(document).keydown (event) ->
         key = event.which || event.keyCode
-        console.log(key)
         callback = commands[key]
         callback() if callback
 
@@ -195,7 +192,6 @@ initialize = (images) ->
                 c.resolve() # let them float
 
     createSubstance = () ->
-        console.log("creating substance")
         if engine.isRunning
             substance = new Water()
             while substance.intersects(ship)
