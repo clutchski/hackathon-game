@@ -17,24 +17,40 @@ body {
   margin-right:auto;
 }
 
+#header {
+  margin-top:10px;
+}
+
 
 #title {
   font-size:60px;
   margin-right:20px;
   text-shadow: 2px 2px #ff69bf;
   float:left;
+  color:#eee;
 }
 
 
 #inventory {
-  top:-10px;
-  color:#2b2b2b;
+  position:relative;
+  top: 5px;
   display:inline;
   float:right;
-  background-color: #aaa;
-  padding: 5px;
-  border: 1px solid white;
+}
+
+#footer {
+  margin-top:40px;
+
+}
+#controls, #inventory {
+  background-color: #444;
+  padding: 10px;
+  border: 1px solid black;
   border-radius:5px;
+  list-style:none;
+  color:white;
+  text-shadow: 1px 1px #ff69bf;
+  box-shadow: 1px 1px 1px 2px #222;
 }
 
 .inventory_title {
