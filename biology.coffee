@@ -33,7 +33,7 @@ class Ship extends wolf.Polygon
     thrust : () ->
         return if @static
         @thrustIterations = 30
-        impulse = @direction.scale(0.8)
+        impulse = @direction.scale(0.6)
         @applyImpulse(impulse)
 
     # Turn the ship to the starboard side.
@@ -153,7 +153,7 @@ class TractorBeam extends wolf.Circle
 
             @radius = @element.radius + wolf.random(-5, 5)
 
-        if not @element and @pastPositions.length > 50
+        if not @element and @pastPositions.length > 20
             @destroy()
 
     lockOn : (element) ->
@@ -180,7 +180,7 @@ class Substance extends wolf.Circle
             subSubstances : []
             x: wolf.random(100, 700)
             y: wolf.random(100, 400)
-            speed: 0.1
+            speed: 0.05
             mass: 10000
             direction: new wolf.Vector(wolf.random(-1, 1), wolf.random(-1, 1)).normalize()
             radius: 35
@@ -206,7 +206,10 @@ class Substance extends wolf.Circle
 
     render : (context) ->
         context.lineWidth = 5
-        context.strokeStyle = "#ddd"
+        context.strokeStyle = "#444"
+        if not @subSubstances.length
+            context.lineWidth = new Date().getMilliseconds() % 15
+            context.strokeStyle = "white"
         context.beginPath()
         context.arc(@x, @y, @radius, 0, Math.PI *2)
         context.stroke()
@@ -249,7 +252,7 @@ class Water extends Substance
 class Hydrogen extends Substance
 
     constructor : (opts = {}) ->
-        opts.colors = ["blue", "red", "white", "black", "green"]
+        opts.colors = ["green", "green", "#6B8E23"]
         opts.symbol = "H"
         super(opts)
 
@@ -259,6 +262,28 @@ class Oxygen extends Substance
         opts.colors = ["blue", "blue"]
         opts.symbol = "O"
         super(opts)
+
+class Carbon extends Substance
+
+    constructor : (opts = {}) ->
+        opts.colors = ["#FFFFAA", "yellow", "yellow"]
+        opts.symbol = "C"
+        super(opts)
+
+
+class CarbonDioxide extends Substance
+
+    constructor : (opts = {}) ->
+        opts.subSubstances = [
+            new Oxygen()
+            new Oxygen()
+            new Carbon()
+        ]
+        opts.colors = ["#3299CC", "#33A1DE"]
+        opts.symbol = "CO\u00B2"
+        super(opts)
+
+
 
 
 updateInventory = (currentShip) ->
@@ -274,7 +299,6 @@ class Level
 
     constructor : () ->
         $('#game').css('background-image', "url(#{@backgroundImage})")
-        alert(@message)
 
     didYouWin : () ->
         return false
@@ -282,6 +306,8 @@ class Level
     didYouDie : () ->
         return false
 
+    spawn : () ->
+        return if Math.random() > 0.5 then new Water() else new CarbonDioxide()
 
 class SpaceLevel extends Level
 
@@ -317,6 +343,15 @@ class WaterLevel extends Level
 
 engine = null
 
+
+death = () ->
+    engine.destroy()
+    $('body').css('background-color', 'red')
+    setTimeout( () ->
+        window.location = window.location
+    , 1000)
+
+
 initializeLevel = (LevelClass, images) ->
 
     # kill old games
@@ -341,7 +376,7 @@ initializeLevel = (LevelClass, images) ->
         logger.info "updating ui"
         updateInventory(ship)
         if level.didYouDie(ship.inventory)
-            alert('death!')
+            alert('overload!')
         else if level.didYouWin(ship.inventory)
             alert('glory!')
     # Map key presses to behaviours.
@@ -398,20 +433,16 @@ initializeLevel = (LevelClass, images) ->
                 (addSubstance(c) for c in children)
                 other.destroy()
             else if other == ship
-                engine.destroy()
-                $('body').css('background-color', 'red')
-                setTimeout( () ->
-                    window.location = window.location
-                , 1000)
+                death("Collision")
             else
                 c.resolve() # let them float
 
     createSubstance = () ->
         if engine.isRunning
-            substance = new Water()
-            while substance.intersects(ship)
-                substance = new Water()
-            addSubstance(substance)
+            s = level.spawn()
+            while s.intersects(ship)
+                s = level.spawn()
+            addSubstance(s)
         setTimeout( () ->
             createSubstance()
         , 4000)
