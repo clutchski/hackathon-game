@@ -64,7 +64,7 @@ class Ship extends wolf.Polygon
         @image = if not @thrustIterations
             @images.static
         else
-            @images.thrust1
+            @images.thrust
         console.log('aaa')
 
 
@@ -148,8 +148,7 @@ initialize = (images) ->
 
     shipimages = {
         static : images['images/ship.png']
-        thrust1 : images['images/ship.thrust.1.png']
-        thrust2 : images['images/ship.thrust.2.png']
+        thrust : images['images/ship.thrust.png']
     }
 
     # Initialize the engine.
@@ -211,8 +210,7 @@ initialize = (images) ->
 $(document).ready () ->
     urls = [
         'images/ship.png'
-        'images/ship.thrust.1.png'
-        'images/ship.thrust.2.png'
+        'images/ship.thrust.png'
     ]
     images = {}
     loaded = 0
