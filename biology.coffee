@@ -270,7 +270,60 @@ updateInventory = (currentShip) ->
         s.html(substances.length)
 
 
-initialize = (images) ->
+class Level
+
+    constructor : () ->
+        $('#game').css('background-image', "url(#{@backgroundImage})")
+        alert(@message)
+
+    didYouWin : () ->
+        return false
+
+    didYouDie : () ->
+        return false
+
+
+class SpaceLevel extends Level
+
+    constructor : () ->
+        @backgroundImage = "images/space.jpg"
+        @message = """
+            You're in space motherfucker!
+        """
+        super()
+
+    didYouWin  : (inventory) ->
+        return false
+
+    didYouDie : (inventory) ->
+        return false
+
+class WaterLevel extends Level
+
+    constructor : () ->
+        @backgroundImage = "images/underwater.jpg"
+        @message = """
+            AAaaaah! I'm drowning bitches!"
+        """
+        super()
+
+    didYouWin  : (inventory) ->
+        return false
+
+    didYouDie : (inventory) ->
+        return false
+
+
+engine = null
+
+initializeLevel = (LevelClass, images) ->
+
+    # kill old games
+    if engine
+        engine.destroy()
+        engine = null
+
+    level = new LevelClass()
 
     shipimages = {
         static : images['images/ship.png']
@@ -360,11 +413,26 @@ initialize = (images) ->
     createSubstance()
 
 
+initialize = (images) ->
+
+    levels =
+        space: SpaceLevel
+        water: WaterLevel
+
+    runLevel = () ->
+        levelId = location.hash.split("#")[1]
+        Level = levels[levelId] || levels.space
+        initializeLevel(Level, images)
+
+    window.onhashchange = runLevel
+    runLevel()
+
 #
 # Load the images and start the game.
 #
 
 $(document).ready () ->
+
     urls = [
         'images/ship.png'
         'images/ship.thrust.png'
@@ -379,3 +447,9 @@ $(document).ready () ->
             if loaded == urls.length
                 initialize(images)
         image.src = url
+
+
+    $('#levels ar').click (event) ->
+        link = $(event.target)
+        window.location = window.location + link.attr('href')
+
