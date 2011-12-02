@@ -178,6 +178,8 @@ initialize = (images) ->
         console.log("creating substance")
         if engine.isRunning
             substance = new Water()
+            while substance.intersects(ship)
+                substance = new Water()
             addSubstance(substance)
         setTimeout( () ->
             createSubstance()
