@@ -8,14 +8,7 @@ body {
   background-color:#2b2b2b;
   font-family:Courier New;
   color: #ccc;
-}
-
-#title {
-  font-size:60px;
-  display:inline;
-  float:left;
-  margin-right:20px;
-  text-shadow: 2px 2px #ff69bf;
+  padding:5px;
 }
 
 #main {
@@ -24,14 +17,46 @@ body {
   margin-right:auto;
 }
 
+
+#title {
+  font-size:60px;
+  margin-right:20px;
+  text-shadow: 2px 2px #ff69bf;
+  float:left;
+}
+
+
+#inventory {
+  top:-10px;
+  color:#2b2b2b;
+  display:inline;
+  float:right;
+  background-color: #aaa;
+  padding: 5px;
+  border: 1px solid white;
+  border-radius:5px;
+}
+
 .inventory_title {
   font-weight:bold;
   align:middle;
+  margin-bottom:1px;
+  text-decoration:underline;
+}
+
+.inventory_list {
+  list-style:none;
+  float:right;
+  text-align:right;
+  font-weight:bold;
+}
+
+.substance {
+    font-weight:normal;
 }
 
 #game {
   clear:both;
-  margin-top:20px;
   background-image:url(images/space.jpg);
   width: 800px;
   height:500px;
@@ -39,3 +64,6 @@ body {
   border:2px solid #bbb;
 }
 
+.clear {
+    clear:both;
+}
