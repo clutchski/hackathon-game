@@ -95,9 +95,17 @@ class Substance extends wolf.Circle
             @lastMove = now
             @directionPeriod = wolf.random(200, 1200)
 
-    split : () ->
+    # Destroy the substance and return it's composed substances.
+    split : (direction) ->
         @destroy()
-        return @subSubstances
+        d = @direction
+        p = @getPosition()
+        explode = (s) ->
+            s.setPosition(p)
+            s.direction = d.add(direction).normalize()
+            return s
+
+        return (explode(s) for s in @subSubstances)
 
 class Water extends Substance
 
@@ -163,7 +171,7 @@ initialize = (images) ->
         engine.add(substance)
         substance.bind 'collided', (c, other) ->
             if other instanceof Bullet
-                children = substance.split()
+                children = substance.split(other.direction)
                 (addSubstance(c) for c in children)
                 other.destroy()
             else
