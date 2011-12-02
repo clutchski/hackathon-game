@@ -4,8 +4,6 @@
 
 logger = new wolf.Logger('biology')
 
-logger = new wolf.Logger('biology')
-
 class Ship extends wolf.Polygon
 
     constructor : (opts = {}) ->
