@@ -288,27 +288,28 @@ class SpaceLevel extends Level
     constructor : () ->
         @backgroundImage = "images/space.jpg"
         @message = """
-            You're in space motherfucker!
+            You're in space motherfucker! Collect six hydrogen to win! Four
+            oxygen and you lose!
         """
         super()
 
     didYouWin  : (inventory) ->
-        return false
+        return inventory.H and inventory.H.length > 5
 
     didYouDie : (inventory) ->
-        return false
+        return inventory.O and inventory.O.length > 3
 
 class WaterLevel extends Level
 
     constructor : () ->
         @backgroundImage = "images/underwater.jpg"
         @message = """
-            AAaaaah! I'm drowning bitches!"
+            Aaaaah! I'm drowning bitches!
         """
         super()
 
     didYouWin  : (inventory) ->
-        return false
+        return true
 
     didYouDie : (inventory) ->
         return false
@@ -339,6 +340,10 @@ initializeLevel = (LevelClass, images) ->
     ship.bind 'inventory', () ->
         logger.info "updating ui"
         updateInventory(ship)
+        if level.didYouDie(ship.inventory)
+            alert('death!')
+        else if level.didYouWin(ship.inventory)
+            alert('glory!')
     # Map key presses to behaviours.
     commands =
         38 : () ->
