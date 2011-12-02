@@ -325,10 +325,25 @@ class Level
     constructor : () ->
         $('#game').css('background-image', "url(#{@backgroundImage})")
 
-    didYouWin : () ->
-        return false
+    getLevels : (substance) ->
+        gauges = @substanceLevels[substance]
+        return gauges
 
-    didYouDie : () ->
+    count : (inventory, substance) ->
+        return inventory[substance].length
+
+    didYouWin : (inventory) ->
+        for symbol, substances of inventory
+            [ok, max] = @getLevels(symbol)
+            if substances.length < ok
+                return false
+        return true
+
+    didYouDie : (inventory) ->
+        for symbol, substances of inventory
+            [ok, max] = @getLevels(symbol)
+            if substances.length > max
+                return true
         return false
 
     spawn : () ->
@@ -346,12 +361,13 @@ class SpaceLevel extends Level
             oxygen and you lose!
         """
         super()
-
-    didYouWin  : (inventory) ->
-        return inventory.H and inventory.H.length > 5
-
-    didYouDie : (inventory) ->
-        return inventory.O and inventory.O.length > 3
+        @substanceLevels = {
+            'O' : [2, 10]
+            'H' : [2, 10]
+            'C' : [2, 10]
+            'Na' : [2, 10]
+            'Cl' : [2, 10]
+        }
 
 class WaterLevel extends Level
 
@@ -361,13 +377,13 @@ class WaterLevel extends Level
             Aaaaah! I'm drowning bitches!
         """
         super()
-
-    didYouWin  : (inventory) ->
-        return true
-
-    didYouDie : (inventory) ->
-        return false
-
+        @substanceLevels = {
+            'O' : [2, 10]
+            'H' : [2, 10]
+            'C' : [2, 10]
+            'Na' : [2, 10]
+            'Cl' : [2, 10]
+        }
 
 engine = null
 
