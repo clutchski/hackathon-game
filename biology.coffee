@@ -333,14 +333,16 @@ class Level
         return inventory[substance].length
 
     didYouWin : (inventory) ->
-        for symbol, substances of inventory
+        for symbol, substances of @substanceLevels
+            subs = inventory[symbol] || []
             [ok, max] = @getLevels(symbol)
-            if substances.length < ok
+            if subs.length < ok
                 return false
         return true
 
     didYouDie : (inventory) ->
-        for symbol, substances of inventory
+        for symbol, substances of @substanceLevels
+            subs = inventory[symbol] || []
             [ok, max] = @getLevels(symbol)
             if substances.length > max
                 return true
