@@ -138,8 +138,6 @@ initialize = (images) ->
     engine.environment.gravitationalConstant = 0
 
     ship = new Ship({x: 200, y: 200, speed: 0, image: images.ship})
-    wall = new wolf.Rectangle({x:0, y:0, height: 10, width: 800, mass:100000})
-
     # Map key presses to behaviours.
     commands =
         38 : () ->
@@ -164,7 +162,6 @@ initialize = (images) ->
         callback() if callback
 
     engine.add(ship)
-    engine.add(wall)
     engine.start()
 
     addSubstance = (substance) ->
