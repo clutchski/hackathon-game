@@ -171,6 +171,8 @@ initialize = (images) ->
                 children = substance.split(other.direction)
                 (addSubstance(c) for c in children)
                 other.destroy()
+            else if other == ship
+                engine.destroy()
             else
                 c.resolve() # let them float
 
@@ -193,4 +195,4 @@ $(document).ready () ->
         images =
             ship: shipImage
         initialize(images)
-    shipImage.src = 'ship.png'
+    shipImage.src = 'images/ship.png'
