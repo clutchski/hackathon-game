@@ -294,17 +294,17 @@ initialize = (images) ->
             ship.starboard()
         39 : () ->
             ship.port()
-        32 : () ->
+        83 : () ->
             bullet = ship.shootBullet()
             engine.add(bullet)
         80 : () ->
             engine.logStatusReport()
         81 : () ->
             engine.toggle()
-        74 : () ->
+        68 : () ->
             p = new wolf.Point(wolf.random(0, 800), wolf.random(0, 500))
             ship.jump(p)
-        67 : () ->
+        65 : () ->
             logger.info("traaactor")
             beam = ship.tractorBeam()
             beam.bind 'collided', (c, other) ->
