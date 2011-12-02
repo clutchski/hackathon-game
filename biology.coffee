@@ -256,11 +256,13 @@ class Oxygen extends Substance
 
 
 updateInventory = (currentShip) ->
-    alert('aaa')
-    subs = $('.substance')
-    alert(subs)
+
+    # Update the intenvotry counts.
     for symbol, substances of currentShip.inventory
-        subs.find('[symbol="#{symbol}"]').text(substances.length)
+        console.log("#{symbol} #{substances.length}")
+        s = $("#substance#{symbol}")
+        s.html(substances.length)
+
 
 initialize = (images) ->
 
@@ -275,7 +277,8 @@ initialize = (images) ->
 
     ship = new Ship({x: 200, y: 200, speed: 0, images: shipimages})
 
-    ship.bind 'inventory-updated', () ->
+    ship.bind 'inventory', () ->
+        logger.info "updating ui"
         updateInventory(ship)
     # Map key presses to behaviours.
     commands =
