@@ -60,10 +60,10 @@ class Ship extends wolf.Polygon
 class Bullet extends wolf.Circle
 
     constructor : (opts={}) ->
-        opts.radius = 5
+        opts.radius = 3
         opts.speed = 1.5
         opts.dragCoefficient = 0
-        opts.fillStyle = "#000"
+        opts.fillStyle = "#ccc"
         super(opts)
 
 class Substance extends wolf.Circle
