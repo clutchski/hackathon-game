@@ -119,6 +119,12 @@ class TractorBeam extends wolf.Circle
             p = @getPosition()
             context.arc(p.x, p.y, @radius, 0, Math.PI *2)
             context.fill()
+            context.lineWidth = 2
+
+            context.beginPath()
+            context.strokeStyle = "#ccc"
+            context.arc(p.x, p.y, @radius, 0, Math.PI *2)
+            context.stroke()
 
     elapse : (ms, iteration) ->
         colors = [
