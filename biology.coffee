@@ -404,6 +404,24 @@ class WaterLevel extends Level
             'Cl' : [2, 3]
         }
 
+
+class WarOf1812Level extends Level
+
+    constructor : () ->
+        @backgroundImage = "images/1812.jpg"
+        @message = """
+            Aaaaah! I'm drowning bitches!
+        """
+        super()
+        @substanceLevels = {
+            'O' : [2, 3]
+            'H' : [2, 5]
+            'C' : [2 ,3]
+            'Na' : [4, 6]
+            'Cl' : [2, 3]
+        }
+
+
 engine = null
 
 
@@ -521,6 +539,7 @@ initialize = (images) ->
     levels =
         space: SpaceLevel
         water: WaterLevel
+        1812: WarOf1812Level
 
     runLevel = () ->
         levelId = location.hash.split("#")[1]
