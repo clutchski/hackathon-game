@@ -270,6 +270,33 @@ class Carbon extends Substance
         opts.symbol = "C"
         super(opts)
 
+class Sodium extends Substance
+
+    constructor : (opts = {}) ->
+        opts.colors = ["#eee", "#ccc", "#ddd", "#ddd"]
+        opts.symbol = "Na"
+        super(opts)
+
+class Chloride extends Substance
+
+    constructor : (opts = {}) ->
+        opts.colors = ["#008080"]
+        opts.symbol = "Cl"
+        super(opts)
+
+
+class SodiumChloride extends Substance
+
+    constructor : (opts = {}) ->
+        opts.subSubstances = [
+            new Sodium()
+            new Chloride()
+        ]
+
+        opts.colors = ["#eee", "#ccc", "#ddd", "#ddd"]
+        opts.symbol = "NaCl"
+        super(opts)
+
 
 class CarbonDioxide extends Substance
 
@@ -282,8 +309,6 @@ class CarbonDioxide extends Substance
         opts.colors = ["#3299CC", "#33A1DE"]
         opts.symbol = "CO\u00B2"
         super(opts)
-
-
 
 
 updateInventory = (currentShip) ->
@@ -307,7 +332,10 @@ class Level
         return false
 
     spawn : () ->
-        return if Math.random() > 0.5 then new Water() else new CarbonDioxide()
+        els = [Water, CarbonDioxide, SodiumChloride]
+        c = wolf.randomElement(els)
+        return new c
+
 
 class SpaceLevel extends Level
 
