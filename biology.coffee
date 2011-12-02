@@ -19,7 +19,8 @@ class Ship extends wolf.Polygon
     addSubstance : (substance) ->
         @inventory[substance.symbol] ?= []
         @inventory[substance.symbol].push(substance)
-        @trigger('inventory-updated', @)
+        logger.info("added substance #{substance.symbol}")
+        @trigger('inventory', @)
 
     render:  (context) ->
         rads = @direction.getRotation()
@@ -250,7 +251,7 @@ class Oxygen extends Substance
 
     constructor : (opts = {}) ->
         opts.colors = ["blue", "blue"]
-        opts.symbol = "0"
+        opts.symbol = "O"
         super(opts)
 
 
