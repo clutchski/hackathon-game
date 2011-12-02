@@ -375,6 +375,7 @@ initializeLevel = (LevelClass, images) ->
 
 
     # Attach behaviours.
+    $(document).unbind('keydown')
     $(document).keydown (event) ->
         key = event.which || event.keyCode
         callback = commands[key]
